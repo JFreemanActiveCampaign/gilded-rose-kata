@@ -97,21 +97,19 @@ class RefactoredProgram
 		foreach ($this->items as $item) {
 			$quality_increases = isset($quality_increases_whitelist[$item->name]);
 			$quality_static = isset($quality_static_whitelist[$item->name]);
-			if($quality_increases) {
-				if ($item->quality < 50) {
-					$item->quality = $item->quality + 1;
+			if($quality_increases && $item->quality < 50) {
+				$item->quality = $item->quality + 1;
 
-					if ($item->name == "Backstage passes to a TAFKAL80ETC concert") {
-						if ($item->sellIn < 11) {
-							if ($item->quality < 50) {
-								$item->quality = $item->quality + 1;
-							}
+				if ($item->name == "Backstage passes to a TAFKAL80ETC concert") {
+					if ($item->sellIn < 11) {
+						if ($item->quality < 50) {
+							$item->quality = $item->quality + 1;
 						}
+					}
 
-						if ($item->sellIn < 6) {
-							if ($item->quality < 50) {
-								$item->quality = $item->quality + 1;
-							}
+					if ($item->sellIn < 6) {
+						if ($item->quality < 50) {
+							$item->quality = $item->quality + 1;
 						}
 					}
 				}
