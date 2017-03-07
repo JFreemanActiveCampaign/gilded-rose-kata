@@ -91,8 +91,12 @@ class RefactoredProgram
 			'Aged Brie'=>true,
 			'Backstage passes to a TAFKAL80ETC concert'=>true,
 		);
+		$quality_static_whitelist = array(
+			'Sulfuras, Hand of Ragnaros' => true,
+		);
 		foreach ($this->items as $item) {
 			$quality_increases = isset($quality_increases_whitelist[$item->name]);
+			$quality_static = isset($quality_static_whitelist[$item->name]);
 			if($quality_increases) {
 				if ($item->quality < 50) {
 					$item->quality = $item->quality + 1;
@@ -112,19 +116,19 @@ class RefactoredProgram
 					}
 				}
 			} else {
-				if ($item->name != "Sulfuras, Hand of Ragnaros") {
+				if (!$quality_static) {
 					$item->quality = $item->quality - 1;
 				}
 			}
 
-			if ($item->name != "Sulfuras, Hand of Ragnaros") {
+			if (!$quality_static) {
 				$item->sellIn = $item->sellIn - 1;
 			}
 
 			if ($item->sellIn < 0) {
 				if ($item->name != "Aged Brie") {
 					if ($item->name != "Backstage passes to a TAFKAL80ETC concert") {
-						if ($item->name != "Sulfuras, Hand of Ragnaros") {
+						if (!$quality_static) {
 							$item->quality = $item->quality - 1;
 						}
 					} else {
