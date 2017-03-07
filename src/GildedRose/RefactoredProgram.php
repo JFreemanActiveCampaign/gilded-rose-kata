@@ -109,10 +109,8 @@ class RefactoredProgram
 						$item->quality = $item->quality + 1;
 					}
 				}
-			} else {
-				if (!$quality_static) {
-					$item->quality = $item->quality - 1;
-				}
+			} else if(!$quality_static) {
+				$item->quality = $item->quality - 1;
 			}
 
 			if (!$quality_static) {
