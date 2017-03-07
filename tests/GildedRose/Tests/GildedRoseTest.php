@@ -53,8 +53,8 @@ class GildedRoseTest extends TestCase
 				$lookup[$old_item->name] = $old_item;
 			}
 			foreach($prog->getItems() as $item) {
-				$this->assertEquals($lookup[$item->name]->quality, $item->quality, 'Comparing ' . $item->name . ' quality');
-				$this->assertEquals($lookup[$item->name]->sellIn, $item->sellIn, 'Comparing ' . $item->name . ' sellIn');
+				$this->assertEquals($lookup[$item->name]->quality, $item->quality, 'Day ' . $i . ' Comparing ' . $item->name . ' quality');
+				$this->assertEquals($lookup[$item->name]->sellIn, $item->sellIn, 'Day ' . $i . ' Comparing ' . $item->name . ' sellIn');
 			}
 		}
 	}
