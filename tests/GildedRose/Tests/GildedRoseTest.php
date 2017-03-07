@@ -37,10 +37,7 @@ class GildedRoseTest extends TestCase
 			new Item(array('name' => "Conjured Mana Cake",'sellIn' => 3,'quality' => 6)),
 		);
 
-		$maxSellIn = 0;
-		foreach($items_old as $item) {
-			$maxSellIn = max($maxSellIn, $item->sellIn);
-		}
+		$maxSellIn = 100;
 
 		$old_prog = new Program($items_old);
 		$prog = new RefactoredProgram($items_new);
