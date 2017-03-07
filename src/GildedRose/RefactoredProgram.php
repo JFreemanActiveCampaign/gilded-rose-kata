@@ -87,12 +87,13 @@ class RefactoredProgram
 
 	public function UpdateQuality()
 	{
+		$quality_increases_whitelist = array(
+			'Aged Brie'=>true,
+			'Backstage passes to a TAFKAL80ETC concert'=>true,
+		);
 		foreach ($this->items as $item) {
-			if ($item->name != "Aged Brie" && $item->name != "Backstage passes to a TAFKAL80ETC concert") {
-				if ($item->name != "Sulfuras, Hand of Ragnaros") {
-					$item->quality = $item->quality - 1;
-				}
-			} else {
+			$quality_increases = isset($quality_increases_whitelist[$item->name]);
+			if($quality_increases) {
 				if ($item->quality < 50) {
 					$item->quality = $item->quality + 1;
 
@@ -109,6 +110,10 @@ class RefactoredProgram
 							}
 						}
 					}
+				}
+			} else {
+				if ($item->name != "Sulfuras, Hand of Ragnaros") {
+					$item->quality = $item->quality - 1;
 				}
 			}
 
