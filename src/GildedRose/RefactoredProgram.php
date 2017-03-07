@@ -94,9 +94,18 @@ class RefactoredProgram
 		$quality_static_whitelist = array(
 			'Sulfuras, Hand of Ragnaros' => true,
 		);
+		$quality_expires_whitelist = array(
+			'Backstage passes to a TAFKAL80ETC concert' => true,
+		);
+		$quality_increases_after_expire_whitelist = array(
+			'Aged Brie'=>true,
+		);
 		foreach ($this->items as $item) {
 			$quality_increases = isset($quality_increases_whitelist[$item->name]);
+			$quality_increases_after_expire = isset($quality_increases_after_expire_whitelist[$item->name]);
 			$quality_static = isset($quality_static_whitelist[$item->name]);
+			$quality_decreases = !$quality_increases && !$quality_static;
+			$expires_instantly = isset($quality_expires_whitelist[$item->name]);
 			if($quality_increases && $item->quality < 50) {
 				$item->quality = $item->quality + 1;
 
@@ -117,17 +126,18 @@ class RefactoredProgram
 				$item->sellIn = $item->sellIn - 1;
 			}
 
-			if ($item->sellIn < 0) {
-				if ($item->name != "Aged Brie") {
-					if ($item->name != "Backstage passes to a TAFKAL80ETC concert") {
-						if (!$quality_static) {
-							$item->quality = $item->quality - 1;
-						}
-					} else {
-						$item->quality = $item->quality - $item->quality;
-					}
-				} elseif ($item->quality < 50) {
+			$item_expired = $item->sellIn < 0;
+
+			//item is past it's sell by date
+			if ($item_expired) {
+				if($quality_decreases) {
+					$item->quality = $item->quality - 1;
+				}
+				if($quality_increases_after_expire) {
 					$item->quality = $item->quality + 1;
+				}
+				if($expires_instantly) {
+					$item->quality = 0;
 				}
 			}
 
