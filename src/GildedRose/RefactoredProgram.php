@@ -45,7 +45,7 @@ namespace GildedRose;
  * 50, however "Sulfuras" is a legendary item and as such its Quality is 80 and
  * it never alters.
  */
-class RefactoredProgram
+class RefactoredProgram extends \GildedRose\Program
 {
     private $items = array();
 
@@ -101,6 +101,8 @@ class RefactoredProgram
 			'Aged Brie'=>true,
 		);
 		foreach ($this->items as $item) {
+			$original_quality = $item->quality;
+
 			//quality increases each day
 			$quality_increases = isset($quality_increases_whitelist[$item->name]);
 			//quality increases after expiry
@@ -111,6 +113,9 @@ class RefactoredProgram
 			$quality_decreases = !$quality_increases && !$quality_static;
 			//quality is 0 after expiry
 			$expires_instantly = isset($quality_expires_whitelist[$item->name]);
+
+			//whether the item is conjured
+			$is_conjured = stripos($item->name, 'conjured') !== false;
 
 
 			//max quality is 50, unless the quality is already over 50
@@ -155,6 +160,14 @@ class RefactoredProgram
 
 				if($expires_instantly) {
 					$item->quality = 0;
+				}
+			}
+
+			//conjured items should degrade twice as fast
+			if($is_conjured) {
+				$quality_diff = $original_quality - $item->quality;
+				if($quality_diff > 0) {
+					$item->quality = $original_quality - $quality_diff * 2;
 				}
 			}
 
