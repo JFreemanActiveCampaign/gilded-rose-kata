@@ -101,14 +101,21 @@ class RefactoredProgram
 			'Aged Brie'=>true,
 		);
 		foreach ($this->items as $item) {
+			//quality increases each day
 			$quality_increases = isset($quality_increases_whitelist[$item->name]);
+			//quality increases after expiry
 			$quality_increases_after_expire = isset($quality_increases_after_expire_whitelist[$item->name]);
+			//quality does not change
 			$quality_static = isset($quality_static_whitelist[$item->name]);
+			//quality decreases each day
 			$quality_decreases = !$quality_increases && !$quality_static;
+			//quality is 0 after expiry
 			$expires_instantly = isset($quality_expires_whitelist[$item->name]);
+
 			if($quality_increases && $item->quality < 50) {
 				$item->quality = $item->quality + 1;
 
+				//backstage passes get more valuable close to expiry
 				if ($item->name == "Backstage passes to a TAFKAL80ETC concert") {
 					if ($item->sellIn < 11) {
 						$item->quality = $item->quality + 1;
@@ -122,20 +129,26 @@ class RefactoredProgram
 				$item->quality = $item->quality - 1;
 			}
 
+			//static items do not sage
 			if (!$quality_static) {
 				$item->sellIn = $item->sellIn - 1;
 			}
 
 			$item_expired = $item->sellIn < 0;
 
-			//item is past it's sell by date
+			//item is past its sell by date
 			if ($item_expired) {
+
+				//quality decreases each day
 				if($quality_decreases) {
 					$item->quality = $item->quality - 1;
 				}
+				//quality increases after expiry
 				if($quality_increases_after_expire) {
 					$item->quality = $item->quality + 1;
 				}
+				//item has fully expired
+
 				if($expires_instantly) {
 					$item->quality = 0;
 				}
