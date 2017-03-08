@@ -112,7 +112,11 @@ class RefactoredProgram
 			//quality is 0 after expiry
 			$expires_instantly = isset($quality_expires_whitelist[$item->name]);
 
-			if($quality_increases && $item->quality < 50) {
+
+			//max quality is 50, unless the quality is already over 50
+			$max_quality = max(50, $item->quality);
+
+			if($quality_increases) {
 				$item->quality = $item->quality + 1;
 
 				//backstage passes get more valuable close to expiry
@@ -156,6 +160,9 @@ class RefactoredProgram
 
 			//item quality should never be less than 0
 			$item->quality = max(0, $item->quality);
+
+			//item quality should not exceed maximum
+			$item->quality = min($max_quality, $item->quality);
 		}
 	}
 }
