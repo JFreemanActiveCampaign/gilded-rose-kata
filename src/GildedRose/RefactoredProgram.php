@@ -102,6 +102,7 @@ class RefactoredProgram extends \GildedRose\Program
 		);
 		foreach ($this->items as $item) {
 			$original_quality = $item->quality;
+			$original_sellIn = $item->sellIn;
 
 			//quality increases each day
 			$quality_increases = isset($quality_increases_whitelist[$item->name]);
@@ -134,14 +135,12 @@ class RefactoredProgram extends \GildedRose\Program
 						$item->quality = $item->quality + 1;
 					}
 				}
-			} else if(!$quality_static) {
+			} else {
 				$item->quality = $item->quality - 1;
 			}
 
-			//static items do not sage
-			if (!$quality_static) {
-				$item->sellIn = $item->sellIn - 1;
-			}
+			//one day has passed
+			$item->sellIn = $item->sellIn - 1;
 
 			$item_expired = $item->sellIn < 0;
 
@@ -164,11 +163,17 @@ class RefactoredProgram extends \GildedRose\Program
 			}
 
 			//conjured items should degrade twice as fast
-			if($is_conjured) {
+			if($is_conjured && false) {
 				$quality_diff = $original_quality - $item->quality;
 				if($quality_diff > 0) {
 					$item->quality = $original_quality - $quality_diff * 2;
 				}
+			}
+
+			//static items do not degrade
+			if($quality_static) {
+				$item->quality = $original_quality;
+				$item->sellIn = $original_sellIn;
 			}
 
 			//item quality should never be less than 0
