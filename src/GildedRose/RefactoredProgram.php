@@ -163,7 +163,7 @@ class RefactoredProgram extends \GildedRose\Program
 			}
 
 			//conjured items should degrade twice as fast
-			if($is_conjured && false) {
+			if($is_conjured) {
 				$quality_diff = $original_quality - $item->quality;
 				if($quality_diff > 0) {
 					$item->quality = $original_quality - $quality_diff * 2;
